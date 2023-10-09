@@ -1,0 +1,20 @@
+{
+    "name": "llgp/llgp-sdk-php-demo",
+    "description": "LianLian Global (Thailand) payment gateway php sdk demo.",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Llgp\\LlgpSdkPhpDemo\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "liuxf003",
+            "email": "liuxf003@lianlianpay.com"
+        }
+    ],
+    "require": {
+        "llgp/llgp-sdk-php": "^1.0"
+    }
+}
