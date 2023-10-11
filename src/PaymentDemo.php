@@ -65,11 +65,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $checkoutPayResponse = CheckoutPayResponse::fromMap($result['data']);
-        echo json_encode($checkoutPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $checkoutPayResponse = CheckoutPayResponse::fromMap($result['data']);
+                return json_encode($checkoutPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function bankcardPay() {
@@ -81,7 +89,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test bankcard pay order';
         $payRequest->payment_method = LLPayConstant::CARD;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -91,12 +99,12 @@ class PaymentDemo
         $payRequest->customer = $customer;
 
         $card = new Card();
-        $card->holder_name = 'Joe.Ye';
-        $card->card_no = '10086';
-        $card->card_type = '10086';
-        $card->exp_year = '10086';
-        $card->exp_month = '10086';
-        $card->cvv2 = '10086';
+        $card->holder_name = 'card holder name';
+        $card->card_no = '4417704002802961';
+        $card->card_type = 'C';
+        $card->exp_year = '53';
+        $card->exp_month = '12';
+        $card->cvv2 = '123';
         $payRequest->card = $card;
 
         $payRequestJson = json_encode($payRequest);
@@ -104,11 +112,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $bankcardPayResponse = BankcardPayResponse::fromMap($result['data']);
-        echo json_encode($bankcardPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $bankcardPayResponse = BankcardPayResponse::fromMap($result['data']);
+                return json_encode($bankcardPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function aliOnlinePay() {
@@ -120,7 +136,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_info = 'test checkout order';
+        $payRequest->order_info = 'test ali-online pay order';
         $payRequest->payment_method = LLPayConstant::WEB_PAYMENT;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -134,11 +150,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $aliOnlinePayResponse = AliOnlinePayResponse::fromMap($result['data']);
-        echo json_encode($aliOnlinePayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $aliOnlinePayResponse = AliOnlinePayResponse::fromMap($result['data']);
+                return json_encode($aliOnlinePayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function aliOfflinePay() {
@@ -151,7 +175,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_info = 'test checkout order';
+        $payRequest->order_info = 'test ali-offline pay order';
         $payRequest->payment_type = LLPayConstant::DYNAMIC_CODE;
         $payRequest->notify_url = PayConfig::$notifyUrl;
 
@@ -160,11 +184,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $aliOfflinePayResponse = AliOfflinePayResponse::fromMap($result['data']);
-        echo json_encode($aliOfflinePayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $aliOfflinePayResponse = AliOfflinePayResponse::fromMap($result['data']);
+                return json_encode($aliOfflinePayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function weChatPay() {
@@ -176,7 +208,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_info = 'test checkout order';
+        $payRequest->order_info = 'test wechat pay order';
         $payRequest->payment_method = LLPayConstant::DYNAMIC_CODE;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -190,11 +222,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $weChatPayResponse = WeChatPayResponse::fromMap($result['data']);
-        echo json_encode($weChatPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $weChatPayResponse = WeChatPayResponse::fromMap($result['data']);
+                return json_encode($weChatPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function qrPromptPay() {
@@ -206,7 +246,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test qr-prompt pay order';
         $payRequest->payment_method = LLPayConstant::THAI_QR;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -220,11 +260,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $qrPromptPayResponse = QRPromptPayResponse::fromMap($result['data']);
-        echo json_encode($qrPromptPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $qrPromptPayResponse = QRPromptPayResponse::fromMap($result['data']);
+                return json_encode($qrPromptPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function mobileBankingPay() {
@@ -236,10 +284,10 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test mobile banking order';
         $payRequest->payment_method = LLPayConstant::EASY_APP_BILL;
         $payRequest->notify_url = PayConfig::$notifyUrl;
-        $payRequest->app_callback_url = 'app_callback_url';
+        $payRequest->app_callback_url = 'https://app_callback_url';
         $payRequest->mobile_number = '0899898820';
 
         $customer = new Customer();
@@ -252,11 +300,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $mobileBankingPayResponse = MobileBankingPayResponse::fromMap($result['data']);
-        echo json_encode($mobileBankingPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $mobileBankingPayResponse = MobileBankingPayResponse::fromMap($result['data']);
+                return json_encode($mobileBankingPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function linePay() {
@@ -268,7 +324,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test line pay order';
         $payRequest->payment_method = LLPayConstant::NORMAL_BALANCE;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -282,11 +338,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $linePayResponse = LinePayResponse::fromMap($result['data']);
-        echo json_encode($linePayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $linePayResponse = LinePayResponse::fromMap($result['data']);
+                return json_encode($linePayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function shopeePay() {
@@ -298,7 +362,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test shopee pay order';
         $payRequest->payment_method = LLPayConstant::NORMAL_BALANCE_SP;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -312,11 +376,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $shopeePayResponse = ShopeePayResponse::fromMap($result['data']);
-        echo json_encode($shopeePayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $shopeePayResponse = ShopeePayResponse::fromMap($result['data']);
+                return json_encode($shopeePayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function trueMoneyPay() {
@@ -328,7 +400,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test true money pay order';
         $payRequest->payment_method = LLPayConstant::NORMAL_ALL_TM;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -342,11 +414,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $trueMoneyPayResponse = TrueMoneyPayResponse::fromMap($result['data']);
-        echo json_encode($trueMoneyPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $trueMoneyPayResponse = TrueMoneyPayResponse::fromMap($result['data']);
+                return json_encode($trueMoneyPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function counterPay() {
@@ -358,7 +438,7 @@ class PaymentDemo
         $payRequest->merchant_order_id = 'P' . $time;
         $payRequest->order_currency = 'THB';
         $payRequest->order_amount = '50.18';
-        $payRequest->order_desc = 'test checkout order';
+        $payRequest->order_desc = 'test counter pay order';
         $payRequest->payment_method = LLPayConstant::COUNTER_UNION;
         $payRequest->notify_url = PayConfig::$notifyUrl;
         $payRequest->redirect_url = PayConfig::$redirectUrl;
@@ -372,11 +452,19 @@ class PaymentDemo
 
         $result = $this->payClient->execute($payRequest);
 
-        $counterPayResponse = CounterPayResponse::fromMap($result['data']);
-        echo json_encode($counterPayResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $counterPayResponse = CounterPayResponse::fromMap($result['data']);
+                return json_encode($counterPayResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function paymentQuery($merchantOrderId) {
@@ -391,10 +479,18 @@ class PaymentDemo
 
         $result = $this->payClient->execute($paymentQueryRequest);
 
-        $paymentQueryResponse = PaymentQueryResponse::fromMap($result['data']);
-        echo json_encode($paymentQueryResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $paymentQueryResponse = PaymentQueryResponse::fromMap($result['data']);
+                return json_encode($paymentQueryResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 }

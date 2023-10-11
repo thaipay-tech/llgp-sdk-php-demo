@@ -2,6 +2,9 @@
 
 namespace Llgp\LlgpSdkPhpDemo;
 
+require '../vendor/autoload.php';
+require './PayConfig.php';
+
 use Llgp\LlgpSdkPhp\Constants\LLPayConstant;
 use Llgp\LlgpSdkPhp\LLPayClient;
 use Llgp\LlgpSdkPhp\Request\RefundApplyRequest;
@@ -36,11 +39,19 @@ class RefundDemo
 
         $result = $this->refundClient->execute($refundRequest);
 
-        $refundResponse = RefundApplyResponse::fromMap($result['data']);
-        echo json_encode($refundResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $refundResponse = RefundApplyResponse::fromMap($result['data']);
+                return json_encode($refundResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function refundQuery($merchantRefundId) {
@@ -55,10 +66,18 @@ class RefundDemo
 
         $result = $this->refundClient->execute($refundQueryRequest);
 
-        $refundQueryResponse = RefundQueryResponse::fromMap($result['data']);
-        echo json_encode($refundQueryResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $refundQueryResponse = RefundQueryResponse::fromMap($result['data']);
+                return json_encode($refundQueryResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 }

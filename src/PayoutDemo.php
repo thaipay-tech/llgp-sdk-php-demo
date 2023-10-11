@@ -2,6 +2,9 @@
 
 namespace Llgp\LlgpSdkPhpDemo;
 
+require '../vendor/autoload.php';
+require './PayConfig.php';
+
 use Llgp\LlgpSdkPhp\Constants\LLPayConstant;
 use Llgp\LlgpSdkPhp\LLPayClient;
 use Llgp\LlgpSdkPhp\Request\PayoutAccountQueryRequest;
@@ -34,8 +37,8 @@ class PayoutDemo
         $payoutRequest->order_currency = 'THB';
         $payoutRequest->order_amount = '50.18';
         $payoutRequest->order_info = 'test payout order';
-        $payoutRequest->payee_bankcard_account = '5015377989';
-        $payoutRequest->payee_bankcard_account_name = 'John';
+        $payoutRequest->payee_bankcard_account = '1113939657';
+        $payoutRequest->payee_bankcard_account_name = 'account name';
         $payoutRequest->payee_bank_code = '014';
         $payoutRequest->notify_url = PayConfig::$notifyUrl;
         $payoutRequest->memo = 'memo test';
@@ -45,11 +48,19 @@ class PayoutDemo
 
         $result = $this->payoutClient->execute($payoutRequest);
 
-        $payoutResponse = PayoutApplyResponse::fromMap($result['data']);
-        echo json_encode($payoutResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $payoutResponse = PayoutApplyResponse::fromMap($result['data']);
+                return json_encode($payoutResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function payoutApplyTrueMoney() {
@@ -71,20 +82,28 @@ class PayoutDemo
 
         $result = $this->payoutClient->execute($payoutRequest);
 
-        $payoutTrueMoneyResponse = PayoutTrueMoneyResponse::fromMap($result['data']);
-        echo json_encode($payoutTrueMoneyResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $payoutTrueMoneyResponse = PayoutTrueMoneyResponse::fromMap($result['data']);
+                return json_encode($payoutTrueMoneyResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
-    public function payoutConfirm($merchantOrderId) {
+    public function payoutConfirm($merchantOrderId, $confirmCode) {
         $payoutRequest = new PayoutConfirmRequest();
         $payoutRequest->merchant_id = PayConfig::$merchantId;
         $payoutRequest->service = LLPayConstant::PAYOUT_CONFIRM_SERVICE;
         $payoutRequest->version = LLPayConstant::SERVICE_VERSION;
         $payoutRequest->merchant_order_id = $merchantOrderId;
-        $payoutRequest->confirm_code = '676732';
+        $payoutRequest->confirm_code = $confirmCode;
         $payoutRequest->notify_url = PayConfig::$notifyUrl;
 
         $payoutRequestJson = json_encode($payoutRequest);
@@ -92,11 +111,19 @@ class PayoutDemo
 
         $result = $this->payoutClient->execute($payoutRequest);
 
-        $payoutConfirmResponse = PayoutConfirmResponse::fromMap($result['data']);
-        echo json_encode($payoutConfirmResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $payoutConfirmResponse = PayoutConfirmResponse::fromMap($result['data']);
+                return json_encode($payoutConfirmResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function payoutOrderQuery($merchantOrderId) {
@@ -111,11 +138,19 @@ class PayoutDemo
 
         $result = $this->payoutClient->execute($payoutQueryRequest);
 
-        $payoutQueryResponse = PayoutQueryResponse::fromMap($result['data']);
-        echo json_encode($payoutQueryResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $payoutQueryResponse = PayoutQueryResponse::fromMap($result['data']);
+                return json_encode($payoutQueryResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 
     public function payoutAccountBalanceQuery() {
@@ -129,10 +164,18 @@ class PayoutDemo
 
         $result = $this->payoutClient->execute($accountQueryRequest);
 
-        $accountQueryResponse = PayoutAccountQueryResponse::fromMap($result['data']);
-        echo json_encode($accountQueryResponse, JSON_PRETTY_PRINT);
-
         $resultJson = json_encode($result);
         file_put_contents(PayConfig::$logFile, "result=$resultJson\n", FILE_APPEND);
+
+        if ($result['code'] == 200000 && $result['message'] == 'Success') {
+            if ($result['sign_verify'] === true) {
+                $accountQueryResponse = PayoutAccountQueryResponse::fromMap($result['data']);
+                return json_encode($accountQueryResponse, JSON_PRETTY_PRINT);
+            } else {
+                return 'please check the `$lianLianPublicKey` configuration is correct';
+            }
+        } else {
+            return $resultJson;
+        }
     }
 }
