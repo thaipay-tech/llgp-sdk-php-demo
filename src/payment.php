@@ -7,8 +7,8 @@ require './PaymentDemo.php';
 $demo = new PaymentDemo();
 
 $result = $demo->checkoutPay();
-print 'Checkout Pay Response:' . PHP_EOL;
-print $result . PHP_EOL;
+echo 'Checkout Pay Response:' . PHP_EOL;
+echo $result . PHP_EOL;
 
 //$result = $demo->bankcardPay();
 //echo 'Bankcard Pay Response:' . PHP_EOL;
