@@ -50,6 +50,6 @@ echo stripcslashes($result) . PHP_EOL;
 //echo 'Counter Pay Response:' . PHP_EOL;
 //echo stripcslashes($result) . PHP_EOL;
 //
-//$result = $demo->paymentQuery('P20231011032747');
+//$result = $demo->paymentQuery('iOsw5lJslibIgdwKmqnK-KIY1sRxr3uKgDSzCLWSB');
 //echo 'Payment Query Response:' . PHP_EOL;
 //echo stripcslashes($result) . PHP_EOL;
